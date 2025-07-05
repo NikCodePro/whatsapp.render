@@ -1,0 +1,5 @@
+.env
+node_modules
+generate.js
+/src/data/numbers.json
+
