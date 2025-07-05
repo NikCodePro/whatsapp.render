@@ -109,7 +109,7 @@ app.get('/api/whatsapp-redirect', async (req, res) => {
 
   const n = activeNumbers[randomIndex];
   const phone = n.countryCode.replace('+', '') + n.number;
-  const message = encodeURIComponent('Hello');
+  const message = encodeURIComponent('Hola, quiero un usuario');
   const url = `https://wa.me/${phone}?text=${message}`;
   res.redirect(url);
 });
