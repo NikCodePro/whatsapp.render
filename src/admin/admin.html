@@ -1,15 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+  <style>
+    body {
+      background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .admin-container {
+      background: #fff;
+      padding: 2.5rem 2rem 2rem 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(60, 72, 100, 0.12);
+      min-width: 320px;
+      max-width: 95vw;
+      width: 100%;
+      transition: box-shadow 0.3s;
+      position: relative;
+      animation: fadeInUp 0.7s;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    h1 {
+      text-align: center;
+      color: #2d3748;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    .section {
+      margin-bottom: 2rem;
+    }
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #4a5568;
+      margin-bottom: 0.5rem;
+    }
+    .instructions {
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      color: #374151;
+      font-size: 1rem;
+    }
+    .api-link-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .api-link {
+      background: #e0e7ef;
+      color: #2d3748;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.98rem;
+      word-break: break-all;
+      border: none;
+      outline: none;
+      flex: 1 1 auto;
+    }
+    .copy-btn {
+      background: linear-gradient(90deg, #7f9cf5 0%, #667eea 100%);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1.1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .copy-btn:hover {
+      background: linear-gradient(90deg, #667eea 0%, #7f9cf5 100%);
+      transform: translateY(-2px) scale(1.03);
+    }
+    .manage-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      background: #7f9cf5;
+      color: #fff;
+      padding: 0.7rem 1.3rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .manage-link:hover {
+      background: #667eea;
+      transform: translateY(-2px) scale(1.03);
+    }
+    form {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    button[type="submit"] {
+      background: #e53e3e;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    button[type="submit"]:hover {
+      background: #c53030;
+      transform: translateY(-2px) scale(1.03);
+    }
+    @media (max-width: 600px) {
+      .admin-container {
+        min-width: 0;
+        padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+        border-radius: 10px;
+      }
+      h1 {
+        font-size: 1.3rem;
+      }
+      .section-title, .instructions, .api-link {
+        font-size: 0.98rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
     <h1>Admin Panel</h1>
-    <a href="/numbers">Manage WhatsApp Numbers</a>
+    <a class="manage-link" href="/contact">Manage WhatsApp Numbers</a>
+    <div class="section">
+      <div class="section-title">Public WhatsApp Redirect API</div>
+      <div class="instructions">
+        <strong>Share this link publicly:</strong><br>
+        Anyone can use this link to start a WhatsApp chat with a random active number from your list.<br>
+        <br>
+        <b>How it works:</b><br>
+        - Each click rotates to the next active WhatsApp number.<br>
+        - The chat opens with a pre-filled "Hello" message.<br>
+        <br>
+        <b>Instructions:</b><br>
+        1. Copy the link below.<br>
+        2. Share it anywhere (website, QR code, etc).<br>
+        3. When someone clicks, they will be redirected to WhatsApp chat.<br>
+      </div>
+      <div class="api-link-row">
+        <input class="api-link" id="apiLink" readonly value="https://your-domain.com/api/whatsapp-redirect" />
+        <button class="copy-btn" onclick="copyApiLink()">Copy</button>
+      </div>
+    </div>
     <form method="POST" action="/logout">
-      <button>Log Out</button>
+      <button type="submit">Log Out</button>
     </form>
-  </body>
+  </div>
+  <script>
+    // Set your actual domain automatically if possible
+    document.getElementById('apiLink').value = window.location.origin + '/api/whatsapp-redirect';
+    function copyApiLink() {
+      const input = document.getElementById('apiLink');
+      input.select();
+      input.setSelectionRange(0, 99999);
+      document.execCommand('copy');
+      const btn = event.target;
+      btn.textContent = "Copied!";
+      setTimeout(() => btn.textContent = "Copy", 1200);
+    }
+  </script>
+</body>
 </html>

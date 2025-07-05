@@ -22,7 +22,6 @@ app.post('/login', async (req, res) => {
     } else {
       req.session.cookie.expires = false; // Session cookie
     }
-    console.log(`User ${username} logged in. Session ID: ${req.session.id} `);
     return res.redirect('/admin');
   }
   return res.status(401).send('Invalid credentials');
@@ -33,7 +32,7 @@ app.get('/admin', requireAdmin, (req, res) => {
 });
 
 // Numbers management page
-app.get('/numbers', requireAdmin, async (req, res) => {
+app.get('/contact', requireAdmin, async (req, res) => {
   res.sendFile(path.join(__dirname, './src/admin/numbers.html'));
 });
 
@@ -107,7 +106,7 @@ app.get('/api/whatsapp-redirect', async (req, res) => {
   if (numbers[index].status !== 'active') return res.status(404).send('No active numbers');
   lastUsedIndex = (index + 1) % numbers.length;
   const phone = numbers[index].countryCode.replace('+', '') + numbers[index].number;
-  const message = encodeURIComponent("Hola, quiero un usuario");
+  const message = encodeURIComponent('Hola, quiero un usuario');
   const url = `https://wa.me/${phone}?text=${message}`;
   res.redirect(url);
 });
