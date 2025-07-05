@@ -90,23 +90,26 @@ app.post('/api/numbers/edit', requireAdmin, async (req, res) => {
   res.status(400).json({ success: false });
 });
 
-let lastUsedIndex = 0;
+let lastRandomIndex = null;
 
 app.get('/api/whatsapp-redirect', async (req, res) => {
   const numbers = await getNumbers();
-  if (!numbers.length) return res.status(404).send('No numbers available');
-  // Find next active number
-  let tries = 0;
-  let index = lastUsedIndex;
-  while (tries < numbers.length) {
-    if (numbers[index].status === 'active') break;
-    index = (index + 1) % numbers.length;
-    tries++;
+  const activeNumbers = numbers.filter(n => n.status === 'active');
+  if (!activeNumbers.length) return res.status(404).send('No active numbers');
+
+  let randomIndex;
+  if (activeNumbers.length === 1) {
+    randomIndex = 0;
+  } else {
+    do {
+      randomIndex = Math.floor(Math.random() * activeNumbers.length);
+    } while (randomIndex === lastRandomIndex);
   }
-  if (numbers[index].status !== 'active') return res.status(404).send('No active numbers');
-  lastUsedIndex = (index + 1) % numbers.length;
-  const phone = numbers[index].countryCode.replace('+', '') + numbers[index].number;
-  const message = encodeURIComponent('Hola, quiero un usuario');
+  lastRandomIndex = randomIndex;
+
+  const n = activeNumbers[randomIndex];
+  const phone = n.countryCode.replace('+', '') + n.number;
+  const message = encodeURIComponent('Hello');
   const url = `https://wa.me/${phone}?text=${message}`;
   res.redirect(url);
 });
