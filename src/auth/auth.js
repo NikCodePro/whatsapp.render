@@ -16,7 +16,6 @@ export function requireAdmin(req, res, next) {
 }
 
 export async function checkCredentials(username, password) {
-  console.log(`Checking credentials for user: ${username}, ${process.env.USERNAME}, ${process.env.PASSWORD}`);
   if (!username || !password) {
     console.log('Username or password is empty');
     return false;
