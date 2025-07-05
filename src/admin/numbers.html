@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage WhatsApp Numbers</title>
+  <link rel="stylesheet" href="/public/style.css" />
+</head>
+<body>
+  <h1>WhatsApp Numbers</h1>
+  <form id="addForm">
+    <input name="countryCode" placeholder="Country Code" required>
+    <input name="number" placeholder="Number" required>
+    <label>
+      <input type="checkbox" name="status" value="active" checked>
+      Active
+    </label>
+    <button>Add</button>
+  </form>
+  <table border="1" id="numbersTable">
+    <thead>
+      <tr>
+        <th>Country Code</th>
+        <th>Number</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <a href="/admin">Back to Admin</a>
+  <script>
+    async function loadNumbers() {
+      const res = await fetch('/api/numbers');
+      const numbers = await res.json();
+      const tbody = document.querySelector('#numbersTable tbody');
+      tbody.innerHTML = '';
+      numbers.forEach((n, i) => {
+        const status = n.status === 'active' ? 'Active' : 'Inactive';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${n.countryCode}</td><td>${n.number}</td>
+          <td>${status}</td>
+          <td><button onclick="deleteNumber(${i})">Delete</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    async function deleteNumber(index) {
+      await fetch('/api/numbers/delete', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'index=' + encodeURIComponent(index)
+      });
+      loadNumbers();
+    }
+    document.getElementById('addForm').onsubmit = async e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      // If checkbox is checked, status is 'active', else 'inactive'
+      const status = fd.get('status') === 'active' ? 'active' : 'inactive';
+      const data = new URLSearchParams(fd);
+      data.set('status', status);
+      await fetch('/api/numbers', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: data
+      });
+      e.target.reset();
+      loadNumbers();
+    };
+    loadNumbers();
+  </script>
+</body>
+</html>
