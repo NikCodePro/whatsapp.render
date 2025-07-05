@@ -39,14 +39,26 @@ app.get('/api/numbers', requireAdmin, async (req, res) => {
 
 // API: Add a number
 app.post('/api/numbers', requireAdmin, async (req, res) => {
-  const { countryCode, number } = req.body;
-  if (!countryCode || !number) return res.status(400).send('Missing fields');
+  const { countryCode, number, status } = req.body;
+  if (!countryCode || !number)
+    return res.status(400).send('Missing fields');
   const numbers = await getNumbers();
-  numbers.push({ countryCode, number });
+  numbers.push({ countryCode, number, status: status || 'inactive' });
   await saveNumbers(numbers);
   res.json({ success: true });
 });
 
+// API: Update status
+app.post('/api/numbers/status', requireAdmin, async (req, res) => {
+  const { index, status } = req.body;
+  let numbers = await getNumbers();
+  if (numbers[index]) {
+    numbers[index].status = status;
+    await saveNumbers(numbers);
+    return res.json({ success: true });
+  }
+  res.status(400).json({ success: false });
+});
 
 // API: Delete a number
 app.post('/api/numbers/delete', requireAdmin, async (req, res) => {
@@ -55,6 +67,27 @@ app.post('/api/numbers/delete', requireAdmin, async (req, res) => {
   numbers.splice(index, 1);
   await saveNumbers(numbers);
   res.json({ success: true });
+});
+
+let lastUsedIndex = 0;
+
+app.get('/api/whatsapp-redirect', async (req, res) => {
+  const numbers = await getNumbers();
+  if (!numbers.length) return res.status(404).send('No numbers available');
+  // Find next active number
+  let tries = 0;
+  let index = lastUsedIndex;
+  while (tries < numbers.length) {
+    if (numbers[index].status === 'active') break;
+    index = (index + 1) % numbers.length;
+    tries++;
+  }
+  if (numbers[index].status !== 'active') return res.status(404).send('No active numbers');
+  lastUsedIndex = (index + 1) % numbers.length;
+  const phone = numbers[index].countryCode.replace('+', '') + numbers[index].number;
+  const message = encodeURIComponent("Hola, quiero un usuario");
+  const url = `https://wa.me/${phone}?text=${message}`;
+  res.redirect(url);
 });
 
 app.post('/logout', (req, res) => {
