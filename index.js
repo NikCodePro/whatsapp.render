@@ -13,9 +13,15 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, './src/admin/index.html')));
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, remember } = req.body;
   if (await checkCredentials(username, password)) {
     req.session.user = username;
+    // Set session cookie maxAge if "remember" is checked (e.g., 7 days)
+    if (remember) {
+      req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
+    } else {
+      req.session.cookie.expires = false; // Session cookie
+    }
     console.log(`User ${username} logged in. Session ID: ${req.session.id} `);
     return res.redirect('/admin');
   }
@@ -67,6 +73,22 @@ app.post('/api/numbers/delete', requireAdmin, async (req, res) => {
   numbers.splice(index, 1);
   await saveNumbers(numbers);
   res.json({ success: true });
+});
+
+// API: Edit a number
+app.post('/api/numbers/edit', requireAdmin, async (req, res) => {
+  const { index, countryCode, number, status } = req.body;
+  let numbers = await getNumbers();
+  if (numbers[index]) {
+    numbers[index] = {
+      countryCode: countryCode || numbers[index].countryCode,
+      number: number || numbers[index].number,
+      status: status || numbers[index].status
+    };
+    await saveNumbers(numbers);
+    return res.json({ success: true });
+  }
+  res.status(400).json({ success: false });
 });
 
 let lastUsedIndex = 0;

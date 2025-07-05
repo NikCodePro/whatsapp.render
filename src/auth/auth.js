@@ -6,6 +6,10 @@ export const sessionMiddleware = session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    // Default: session cookie (expires when browser closes)
+    // We'll override this in the login route if "remember" is checked
+  }
 });
 
 export function requireAdmin(req, res, next) {

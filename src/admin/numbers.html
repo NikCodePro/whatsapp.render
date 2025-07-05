@@ -27,6 +27,22 @@
     </thead>
     <tbody></tbody>
   </table>
+
+  <!-- Edit Modal -->
+  <div id="editModal" style="display:none; position:fixed; top:20%; left:40%; background:#fff; border:1px solid #ccc; padding:20px;">
+    <form id="editForm">
+      <input type="hidden" name="index" id="editIndex">
+      <label>Country Code: <input name="countryCode" id="editCountryCode" required></label><br>
+      <label>Number: <input name="number" id="editNumber" required></label><br>
+      <label>
+        <input type="checkbox" name="status" id="editStatus" value="active">
+        Active
+      </label><br>
+      <button type="submit">Save</button>
+      <button type="button" onclick="closeEditModal()">Cancel</button>
+    </form>
+  </div>
+
   <a href="/admin">Back to Admin</a>
   <script>
     async function loadNumbers() {
@@ -45,12 +61,46 @@
             <span>${n.status === 'active' ? 'Active' : 'Inactive'}</span>
           </td>
           <td>
+            <button onclick="editNumber(${i})">Edit</button>
             <button onclick="deleteNumber(${i})">Delete</button>
           </td>
         `;
         tbody.appendChild(tr);
       });
     }
+
+    function editNumber(index) {
+      fetch('/api/numbers')
+        .then(res => res.json())
+        .then(numbers => {
+          const n = numbers[index];
+          document.getElementById('editIndex').value = index;
+          document.getElementById('editCountryCode').value = n.countryCode;
+          document.getElementById('editNumber').value = n.number;
+          document.getElementById('editStatus').checked = n.status === 'active';
+          document.getElementById('editModal').style.display = 'block';
+        });
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+    }
+
+    document.getElementById('editForm').onsubmit = async e => {
+      e.preventDefault();
+      const index = document.getElementById('editIndex').value;
+      const countryCode = document.getElementById('editCountryCode').value;
+      const number = document.getElementById('editNumber').value;
+      const status = document.getElementById('editStatus').checked ? 'active' : 'inactive';
+      await fetch('/api/numbers/edit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `index=${index}&countryCode=${encodeURIComponent(countryCode)}&number=${encodeURIComponent(number)}&status=${status}`
+      });
+      closeEditModal();
+      loadNumbers();
+    };
+
     async function updateStatus(index, checked) {
       const status = checked ? 'active' : 'inactive';
       await fetch('/api/numbers/status', {
