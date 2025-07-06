@@ -101,6 +101,22 @@
       background: #667eea;
       transform: translateY(-2px) scale(1.03);
     }
+    .assign-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      background: #667eea;
+      color: #fff;
+      padding: 0.7rem 1.3rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      margin-left: 0.7rem;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .assign-link:hover {
+      background: #7f9cf5;
+      transform: translateY(-2px) scale(1.03);
+    }
     form {
       margin-top: 2rem;
       text-align: center;
@@ -139,6 +155,7 @@
   <div class="admin-container">
     <h1>Admin Panel</h1>
     <a class="manage-link" href="/contact">Manage WhatsApp Numbers</a>
+    <a class="assign-link" href="/messages">Assign Custom Messages</a>
     <div class="section">
       <div class="section-title">Public WhatsApp Redirect API</div>
       <div class="instructions">
