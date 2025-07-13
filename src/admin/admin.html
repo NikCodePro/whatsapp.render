@@ -1,197 +1,471 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Panel</title>
-  <style>
-    body {
-      background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
-      min-height: 100vh;
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .admin-container {
-      background: #fff;
-      padding: 2.5rem 2rem 2rem 2rem;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(60, 72, 100, 0.12);
-      min-width: 320px;
-      max-width: 95vw;
-      width: 100%;
-      transition: box-shadow 0.3s;
-      position: relative;
-      animation: fadeInUp 0.7s;
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(40px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
-    h1 {
-      text-align: center;
-      color: #2d3748;
-      margin-bottom: 1.5rem;
-      font-size: 2rem;
-      font-weight: 600;
-    }
-    .section {
-      margin-bottom: 2rem;
-    }
-    .section-title {
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: #4a5568;
-      margin-bottom: 0.5rem;
-    }
-    .instructions {
-      background: #f1f5f9;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      color: #374151;
-      font-size: 1rem;
-    }
-    .api-link-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .api-link {
-      background: #e0e7ef;
-      color: #2d3748;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      font-size: 0.98rem;
-      word-break: break-all;
-      border: none;
-      outline: none;
-      flex: 1 1 auto;
-    }
-    .copy-btn {
-      background: linear-gradient(90deg, #7f9cf5 0%, #667eea 100%);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 0.5rem 1.1rem;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .copy-btn:hover {
-      background: linear-gradient(90deg, #667eea 0%, #7f9cf5 100%);
-      transform: translateY(-2px) scale(1.03);
-    }
-    .manage-link {
-      display: inline-block;
-      margin-bottom: 1.5rem;
-      background: #7f9cf5;
-      color: #fff;
-      padding: 0.7rem 1.3rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .manage-link:hover {
-      background: #667eea;
-      transform: translateY(-2px) scale(1.03);
-    }
-    .assign-link {
-      display: inline-block;
-      margin-bottom: 1.5rem;
-      background: #667eea;
-      color: #fff;
-      padding: 0.7rem 1.3rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 500;
-      margin-left: 0.7rem;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .assign-link:hover {
-      background: #7f9cf5;
-      transform: translateY(-2px) scale(1.03);
-    }
-    form {
-      margin-top: 2rem;
-      text-align: center;
-    }
-    button[type="submit"] {
-      background: #e53e3e;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 0.7rem 1.5rem;
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-    }
-    button[type="submit"]:hover {
-      background: #c53030;
-      transform: translateY(-2px) scale(1.03);
-    }
-    @media (max-width: 600px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel</title>
+    <style>
+      body {
+        background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+        min-height: 100vh;
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      
       .admin-container {
-        min-width: 0;
-        padding: 1.2rem 0.7rem 1.2rem 0.7rem;
-        border-radius: 10px;
+        background: #fff;
+        padding: 2.5rem 2rem 2rem 2rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(60, 72, 100, 0.12);
+        min-width: 320px;
+        max-width: 900px;
+        width: 100%;
+        transition: box-shadow 0.3s;
+        position: relative;
+        animation: fadeInUp 0.7s;
       }
+      
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
       h1 {
-        font-size: 1.3rem;
+        text-align: center;
+        color: #2d3748;
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+        font-weight: 600;
       }
-      .section-title, .instructions, .api-link {
-        font-size: 0.98rem;
+      
+      .header-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="admin-container">
-    <h1>Admin Panel</h1>
-    <a class="manage-link" href="/contact">Manage WhatsApp Numbers</a>
-    <a class="assign-link" href="/messages">Assign Custom Messages</a>
-    <div class="section">
-      <div class="section-title">Public WhatsApp Redirect API</div>
-      <div class="instructions">
-        <strong>Share this link publicly:</strong><br>
-        Anyone can use this link to start a WhatsApp chat with a random active number from your list.<br>
-        <br>
-        <b>How it works:</b><br>
-        - Each click rotates to the next active WhatsApp number.<br>
-        - The chat opens with a pre-filled "Hello" message.<br>
-        <br>
-        <b>Instructions:</b><br>
-        1. Copy the link below.<br>
-        2. Share it anywhere (website, QR code, etc).<br>
-        3. When someone clicks, they will be redirected to WhatsApp chat.<br>
+      
+      .section {
+        margin-bottom: 2rem;
+      }
+      
+      .section-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.5rem;
+      }
+      
+      .instructions {
+        background: #f1f5f9;
+        border-radius: 8px;
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+        color: #374151;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      
+      .documentation {
+        background: #fef9e7;
+        border-left: 4px solid #f59e0b;
+        border-radius: 8px;
+        padding: 1.2rem;
+        margin-bottom: 1.5rem;
+        color: #92400e;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      
+      .code-block {
+        background: #1a202c;
+        color: #e2e8f0;
+        padding: 1rem;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+        margin: 1rem 0;
+        position: relative;
+      }
+      
+      .code-copy-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: #4a5568;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      
+      .code-copy-btn:hover {
+        background: #2d3748;
+      }
+      
+      .api-link-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      
+      .api-link {
+        background: #e0e7ef;
+        color: #2d3748;
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        word-break: break-all;
+        border: none;
+        outline: none;
+        flex: 1 1 auto;
+        min-width: 200px;
+      }
+      
+      .copy-btn {
+        background: linear-gradient(90deg, #7f9cf5 0%, #667eea 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+        white-space: nowrap;
+      }
+      
+      .copy-btn:hover {
+        background: linear-gradient(90deg, #667eea 0%, #7f9cf5 100%);
+        transform: translateY(-2px) scale(1.03);
+      }
+      
+      .manage-link {
+        display: inline-block;
+        background: #7f9cf5;
+        color: #fff;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.2s, transform 0.1s;
+        text-align: center;
+      }
+      
+      .manage-link:hover {
+        background: #667eea;
+        transform: translateY(-2px) scale(1.03);
+      }
+      
+      .add-group-btn {
+        background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        color: #fff;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.2s, transform 0.1s;
+        text-align: center;
+      }
+      
+      .add-group-btn:hover {
+        background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+        transform: translateY(-2px) scale(1.03);
+      }
+      
+      .group-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      
+      .group-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.2s;
+      }
+      
+      .group-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      
+      .group-name {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+      }
+      
+      .group-link {
+        display: inline-block;
+        background: #667eea;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: background 0.2s;
+      }
+      
+      .group-link:hover {
+        background: #7f9cf5;
+      }
+      
+      .redirect-links-section {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+      }
+      
+      .redirect-link-item {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .redirect-link-item:last-child {
+        margin-bottom: 0;
+      }
+      
+      .redirect-link-title {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+      }
+      
+      form {
+        margin-top: 2rem;
+        text-align: center;
+      }
+      
+      button[type="submit"] {
+        background: #e53e3e;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+      }
+      
+      button[type="submit"]:hover {
+        background: #c53030;
+        transform: translateY(-2px) scale(1.03);
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .admin-container {
+          padding: 1.5rem 1rem;
+          border-radius: 10px;
+        }
+        
+        h1 {
+          font-size: 1.6rem;
+        }
+        
+        .header-actions {
+          flex-direction: column;
+          align-items: center;
+        }
+        
+        .manage-link, .add-group-btn {
+          width: 100%;
+          max-width: 300px;
+        }
+        
+        .api-link-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        
+        .api-link {
+          min-width: auto;
+          margin-bottom: 0.5rem;
+        }
+        
+        .copy-btn {
+          width: 100%;
+        }
+        
+        .group-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .code-block {
+          font-size: 0.8rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .admin-container {
+          padding: 1rem 0.8rem;
+        }
+        
+        h1 {
+          font-size: 1.4rem;
+        }
+        
+        .section-title {
+          font-size: 1.1rem;
+        }
+        
+        .instructions, .documentation {
+          font-size: 0.9rem;
+          padding: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-container">
+      <h1>Admin Panel</h1>
+      
+      <div class="header-actions">
+        <a class="manage-link" href="/contact">Manage WhatsApp Numbers</a>
+        <a class="add-group-btn" href="/group">Add Groups</a>
       </div>
-      <div class="api-link-row">
-        <input class="api-link" id="apiLink" readonly value="https://your-domain.com/api/whatsapp-redirect" />
-        <button class="copy-btn" onclick="copyApiLink()">Copy</button>
+
+      <div class="section">
+        <div class="section-title">📋 Group Management</div>
+        <div class="instructions">
+          <strong>Manage your WhatsApp groups:</strong><br />
+          Create and organize different groups for targeted WhatsApp redirects. Each group can have its own set of WhatsApp numbers and custom redirect behavior.
+        </div>
+        
+        <div id="groupButtons" class="group-grid"></div>
       </div>
+
+      <div class="section">
+        <div class="section-title">🔗 Redirect Links Documentation</div>
+        
+        <div class="documentation">
+          <strong>📖 How to use redirect links:</strong><br />
+          These links automatically redirect users to WhatsApp chats with your numbers. Copy the links below and use them in your websites, QR codes, or marketing materials.
+        </div>
+
+        <div class="redirect-links-section">
+          <div id="groupRedirectLinks"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">🔧 API Usage Guide</div>
+        <div class="instructions">
+          <strong>How it works:</strong><br />
+          1. Each click rotates to the next active WhatsApp number in the group<br />
+          2. The chat opens with a pre-filled "Hello" message<br />
+          3. Users are automatically redirected to WhatsApp web or app<br />
+          <br />
+          <strong>Usage Instructions:</strong><br />
+          1. Copy the desired group redirect link<br />
+          2. Use it in your website, QR codes, or marketing materials<br />
+          3. Monitor performance through the admin panel<br />
+        </div>
+      </div>
+
+      <form method="POST" action="/logout">
+        <button type="submit">Log Out</button>
+      </form>
     </div>
-    <form method="POST" action="/logout">
-      <button type="submit">Log Out</button>
-    </form>
-  </div>
-  <script>
-    // Set your actual domain automatically if possible
-    document.getElementById('apiLink').value = window.location.origin + '/api/whatsapp-redirect';
-    function copyApiLink() {
-      const input = document.getElementById('apiLink');
-      input.select();
-      input.setSelectionRange(0, 99999);
-      document.execCommand('copy');
-      const btn = event.target;
-      btn.textContent = "Copied!";
-      setTimeout(() => btn.textContent = "Copy", 1200);
-    }
-  </script>
-</body>
+    
+    <script>
+      // Set your actual domain automatically
+      function updateDomainLinks() {
+        const domain = window.location.origin;
+      }
+
+      function copyCode(button) {
+        const codeBlock = button.nextElementSibling;
+        navigator.clipboard.writeText(codeBlock.textContent).then(() => {
+          button.textContent = "Copied!";
+          setTimeout(() => (button.textContent = "Copy"), 1200);
+        });
+      }
+
+      function copyGroupLink(link) {
+        navigator.clipboard.writeText(link).then(() => {
+          event.target.textContent = 'Copied!';
+          setTimeout(() => (event.target.textContent = 'Copy'), 1200);
+        });
+      }
+
+      // Load and display group buttons
+      async function loadGroupButtons() {
+        try {
+          const res = await fetch("/api/groups");
+          const groups = await res.json();
+          const groupButtonsContainer = document.getElementById("groupButtons");
+          const groupRedirectLinksContainer = document.getElementById("groupRedirectLinks");
+          
+          groupButtonsContainer.innerHTML = "";
+          groupRedirectLinksContainer.innerHTML = "";
+
+          groups.forEach((group) => {
+            const encodedGroup = encodeURIComponent(group);
+            const domain = window.location.origin;
+            const redirectUrl = `${domain}/api/whatsapp-redirect/${encodedGroup}`;
+
+            // Group management cards
+            const groupCard = document.createElement("div");
+            groupCard.className = "group-card";
+            groupCard.innerHTML = `
+              <div class="group-name">${group}</div>
+              <a href="/groups/${encodedGroup}" class="group-link">Manage</a>
+            `;
+            groupButtonsContainer.appendChild(groupCard);
+
+            // Group redirect links
+            const redirectLinkItem = document.createElement("div");
+            redirectLinkItem.className = "redirect-link-item";
+            redirectLinkItem.innerHTML = `
+              <div class="redirect-link-title">🏷️ ${group} Group</div>
+              <div style="margin-bottom: 1rem; color: #6b7280; font-size: 0.9rem;">
+                Redirects to numbers assigned to the "${group}" group
+              </div>
+              <div class="api-link-row">
+                <input class="api-link" readonly value="${redirectUrl}" />
+                <button class="copy-btn" onclick="copyGroupLink('${redirectUrl}')">Copy</button>
+              </div>
+            `;
+            groupRedirectLinksContainer.appendChild(redirectLinkItem);
+          });
+        } catch (err) {
+          console.error("Failed to load groups", err);
+        }
+      }
+
+      // Initialize
+      updateDomainLinks();
+      loadGroupButtons();
+    </script>
+  </body>
 </html>

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Group Numbers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+      body {
+        background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+        min-height: 100vh;
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        padding: 2rem 1rem;
+      }
+      
+      .container {
+        background: #fff;
+        padding: 2.5rem 2rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(60, 72, 100, 0.12);
+        max-width: 1200px;
+        margin: 0 auto;
+        animation: fadeInUp 0.7s;
+      }
+      
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      h1 {
+        text-align: center;
+        color: #2d3748;
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+        font-weight: 600;
+      }
+      
+      .section {
+        margin-bottom: 2rem;
+      }
+      
+      .section-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.5rem;
+      }
+      
+      .table-container {
+        overflow-x: auto;
+        margin-bottom: 1.5rem;
+      }
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      th {
+        background: #f8fafc;
+        color: #2d3748;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 2px solid #e2e8f0;
+      }
+      
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+        vertical-align: middle;
+      }
+      
+      tr:hover {
+        background: #f8fafc;
+      }
+      
+      .edited-row {
+        background: #fef3c7 !important;
+        border-left: 4px solid #f59e0b;
+      }
+      
+      input, select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        transition: border-color 0.2s;
+      }
+      
+      input:focus, select:focus {
+        outline: none;
+        border-color: #7f9cf5;
+        box-shadow: 0 0 0 2px rgba(127, 156, 245, 0.2);
+      }
+      
+      .edited-input {
+        border-color: #f59e0b !important;
+        background: #fef3c7;
+      }
+      
+      .status-active {
+        color: #10b981;
+        font-weight: 600;
+      }
+      
+      .status-inactive {
+        color: #ef4444;
+        font-weight: 600;
+      }
+      
+      .redirect-count {
+        font-weight: 600;
+        color: #7f9cf5;
+      }
+      
+      .actions-container {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .action-btn {
+        background: linear-gradient(90deg, #7f9cf5 0%, #667eea 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+      
+      .action-btn:hover {
+        background: linear-gradient(90deg, #667eea 0%, #7f9cf5 100%);
+        transform: translateY(-2px) scale(1.03);
+      }
+      
+      .action-btn:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+        transform: none;
+      }
+      
+      .action-btn.danger {
+        background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+      }
+      
+      .action-btn.danger:hover {
+        background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+      }
+      
+      .action-btn.secondary {
+        background: linear-gradient(90deg, #6b7280 0%, #4b5563 100%);
+      }
+      
+      .action-btn.secondary:hover {
+        background: linear-gradient(90deg, #4b5563 0%, #6b7280 100%);
+      }
+      
+      .action-btn.success {
+        background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+      }
+      
+      .action-btn.success:hover {
+        background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+      }
+      
+      .action-btn.cancel {
+        background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+      }
+      
+      .action-btn.cancel:hover {
+        background: linear-gradient(90deg, #d97706 0%, #f59e0b 100%);
+      }
+      
+      .delete-btn {
+        background: #ef4444;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      
+      .delete-btn:hover {
+        background: #dc2626;
+      }
+      
+      .edit-actions {
+        display: none;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        justify-content: center;
+        padding: 1rem;
+        background: #fef3c7;
+        border-radius: 8px;
+        border: 1px solid #f59e0b;
+      }
+      
+      .edit-actions.show {
+        display: flex;
+      }
+      
+      .edit-actions button {
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 500;
+      }
+      
+      .save-changes-btn {
+        background: #10b981;
+        color: white;
+      }
+      
+      .save-changes-btn:hover {
+        background: #059669;
+      }
+      
+      .cancel-changes-btn {
+        background: #f59e0b;
+        color: white;
+      }
+      
+      .cancel-changes-btn:hover {
+        background: #d97706;
+      }
+      
+      .changes-indicator {
+        display: none;
+        background: #fef3c7;
+        color: #92400e;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border: 1px solid #f59e0b;
+        font-weight: 500;
+      }
+      
+      .changes-indicator.show {
+        display: block;
+      }
+      
+      .group-redirect-section {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-top: 2rem;
+        border: 1px solid #e2e8f0;
+      }
+      
+      .redirect-link-container {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      .redirect-link-title {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .redirect-link-description {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+      
+      .api-link-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      
+      .api-link {
+        background: #e0e7ef;
+        color: #2d3748;
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        word-break: break-all;
+        border: none;
+        outline: none;
+        flex: 1 1 auto;
+        min-width: 200px;
+      }
+      
+      .copy-btn {
+        background: linear-gradient(90deg, #7f9cf5 0%, #667eea 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      
+      .copy-btn:hover {
+        background: linear-gradient(90deg, #667eea 0%, #7f9cf5 100%);
+        transform: translateY(-2px) scale(1.03);
+      }
+      
+      .back-link {
+        display: inline-block;
+        background: #6b7280;
+        color: #fff;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s;
+        margin-top: 1rem;
+      }
+      
+      .back-link:hover {
+        background: #4b5563;
+        transform: translateY(-2px) scale(1.03);
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          padding: 1.5rem 1rem;
+        }
+        
+        h1 {
+          font-size: 1.6rem;
+        }
+        
+        .actions-container {
+          flex-direction: column;
+          align-items: center;
+        }
+        
+        .action-btn {
+          width: 100%;
+          max-width: 300px;
+        }
+        
+        .edit-actions {
+          flex-direction: column;
+        }
+        
+        .api-link-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        
+        .api-link {
+          min-width: auto;
+          margin-bottom: 0.5rem;
+        }
+        
+        .copy-btn {
+          width: 100%;
+        }
+        
+        th, td {
+          padding: 0.8rem 0.5rem;
+          font-size: 0.9rem;
+        }
+        
+        input, select {
+          padding: 0.4rem;
+          font-size: 0.8rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .container {
+          padding: 1rem 0.8rem;
+        }
+        
+        h1 {
+          font-size: 1.4rem;
+        }
+        
+        .section-title {
+          font-size: 1.1rem;
+        }
+        
+        th, td {
+          padding: 0.6rem 0.4rem;
+          font-size: 0.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 id="groupTitle">Group: </h1>
+
+      <div class="section">
+        <div class="section-title">📱 Group Numbers Management</div>
+        
+        <div class="changes-indicator" id="changesIndicator">
+          ⚠️ You have unsaved changes. Click "Save Changes" to confirm or "Cancel" to discard.
+        </div>
+        
+        <div class="table-container">
+          <table id="groupNumbersTable">
+            <thead>
+              <tr>
+                <th>Country Code</th>
+                <th>Number</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        
+        <div class="edit-actions" id="editActions">
+          <button class="save-changes-btn" onclick="saveAllChanges()">Save Changes</button>
+          <button class="cancel-changes-btn" onclick="cancelAllChanges()">Cancel</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">📊 Redirect Statistics</div>
+        <div class="table-container">
+          <table id="redirectStatsTable">
+            <thead>
+              <tr>
+                <th>Country Code</th>
+                <th>Number</th>
+                <th>Status</th>
+                <th>Total Redirects</th>
+                <th>% of Group</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="actions-container">
+        <button class="action-btn danger" onclick="clearRedirectLogs()">Clear Redirect Logs</button>
+        <button class="action-btn secondary" onclick="downloadPDF()">Download Stats PDF</button>
+      </div>
+
+      <div class="group-redirect-section">
+        <div class="section-title">🔗 Group Redirect Link</div>
+        <div id="groupRedirectContainer"></div>
+      </div>
+
+      <a class="back-link" href="/admin">← Back to Admin</a>
+    </div>
+
+    <script>
+      const groupName = decodeURIComponent(
+        window.location.pathname.split("/").pop()
+      );
+      document.getElementById("groupTitle").textContent += groupName;
+
+      let latestStats = [];
+      let originalNumbers = [];
+      let currentNumbers = [];
+      let hasChanges = false;
+
+      async function loadGroupNumbers() {
+        const [res1, res2] = await Promise.all([
+          fetch(`/api/group-numbers/${groupName}`),
+          fetch(`/api/redirect-stats`),
+        ]);
+        const numbers = await res1.json();
+        const allStats = await res2.json();
+        latestStats = allStats.filter((s) => s.group === groupName);
+
+        // Store original data
+        originalNumbers = JSON.parse(JSON.stringify(numbers));
+        currentNumbers = JSON.parse(JSON.stringify(numbers));
+
+        // Populate editable table
+        renderNumbersTable();
+
+        // Populate redirect stats table
+        const statsBody = document.querySelector("#redirectStatsTable tbody");
+        statsBody.innerHTML = "";
+        latestStats.forEach((stat) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${stat.countryCode}</td>
+            <td>${stat.number}</td>
+            <td><span class="status-${stat.status}">${stat.status}</span></td>
+            <td><span class="redirect-count">${stat.count}</span></td>
+            <td><strong>${stat.percent}%</strong></td>
+          `;
+          statsBody.appendChild(tr);
+        });
+
+        // Load group redirect link
+        loadGroupRedirectLink();
+        
+        // Reset changes state
+        hasChanges = false;
+        updateChangesIndicator();
+      }
+
+      function renderNumbersTable() {
+        const tbody = document.querySelector("#groupNumbersTable tbody");
+        tbody.innerHTML = "";
+        currentNumbers.forEach((n, i) => {
+          const tr = document.createElement("tr");
+          const isChanged = hasRowChanged(i);
+          
+          tr.className = isChanged ? 'edited-row' : '';
+          tr.innerHTML = `
+            <td><input class="${isChanged ? 'edited-input' : ''}" value="${n.countryCode}" onchange="updateField(${i}, 'countryCode', this.value)" /></td>
+            <td><input class="${isChanged ? 'edited-input' : ''}" value="${n.number}" onchange="updateField(${i}, 'number', this.value)" /></td>
+            <td><input class="${isChanged ? 'edited-input' : ''}" value="${n.message || ""}" onchange="updateField(${i}, 'message', this.value)" /></td>
+            <td>
+              <select class="${isChanged ? 'edited-input' : ''}" onchange="updateField(${i}, 'status', this.value)">
+                <option value="active" ${n.status === "active" ? "selected" : ""}>Active</option>
+                <option value="inactive" ${n.status === "inactive" ? "selected" : ""}>Inactive</option>
+              </select>
+            </td>
+            <td><button class="delete-btn" onclick="deleteNumber(${i})">Delete</button></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function hasRowChanged(index) {
+        const original = originalNumbers[index];
+        const current = currentNumbers[index];
+        if (!original || !current) return true;
+        
+        return original.countryCode !== current.countryCode ||
+               original.number !== current.number ||
+               original.message !== current.message ||
+               original.status !== current.status;
+      }
+
+      function updateField(index, field, value) {
+        currentNumbers[index][field] = value;
+        hasChanges = true;
+        updateChangesIndicator();
+        renderNumbersTable();
+      }
+
+      function updateChangesIndicator() {
+        const indicator = document.getElementById('changesIndicator');
+        const editActions = document.getElementById('editActions');
+        
+        if (hasChanges) {
+          indicator.classList.add('show');
+          editActions.classList.add('show');
+        } else {
+          indicator.classList.remove('show');
+          editActions.classList.remove('show');
+        }
+      }
+
+      async function saveAllChanges() {
+        if (!hasChanges) return;
+        
+        const changedRows = currentNumbers.filter((_, index) => hasRowChanged(index));
+        
+        if (changedRows.length === 0) {
+          hasChanges = false;
+          updateChangesIndicator();
+          return;
+        }
+
+        const confirmMessage = `Are you sure you want to save ${changedRows.length} changes?\n\nThis will update the following:\n` +
+          changedRows.map((row, index) => {
+            const originalIndex = currentNumbers.findIndex(n => n === row);
+            const original = originalNumbers[originalIndex];
+            let changes = [];
+            if (original.countryCode !== row.countryCode) changes.push(`Country: ${original.countryCode} → ${row.countryCode}`);
+            if (original.number !== row.number) changes.push(`Number: ${original.number} → ${row.number}`);
+            if (original.message !== row.message) changes.push(`Message: "${original.message}" → "${row.message}"`);
+            if (original.status !== row.status) changes.push(`Status: ${original.status} → ${row.status}`);
+            return `• ${row.countryCode} ${row.number}: ${changes.join(', ')}`;
+          }).join('\n');
+
+        if (!confirm(confirmMessage)) {
+          return;
+        }
+
+        try {
+          // Save all changes
+          const savePromises = currentNumbers.map(async (number, index) => {
+            if (hasRowChanged(index)) {
+              const res = await fetch("/api/edit-numbers", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `group=${groupName}&index=${index}&countryCode=${encodeURIComponent(number.countryCode)}&number=${encodeURIComponent(number.number)}&message=${encodeURIComponent(number.message || '')}&status=${number.status}`,
+              });
+              if (!res.ok) throw new Error(`Failed to save changes for ${number.countryCode} ${number.number}`);
+            }
+          });
+
+          await Promise.all(savePromises);
+          
+          // Reload data to get fresh state
+          await loadGroupNumbers();
+          
+          alert('✅ All changes saved successfully!');
+          
+        } catch (error) {
+          alert(`❌ Error saving changes: ${error.message}`);
+        }
+      }
+
+      function cancelAllChanges() {
+        if (!hasChanges) return;
+        
+        if (confirm('Are you sure you want to cancel all changes? This will discard all unsaved modifications.')) {
+          currentNumbers = JSON.parse(JSON.stringify(originalNumbers));
+          hasChanges = false;
+          updateChangesIndicator();
+          renderNumbersTable();
+        }
+      }
+
+      function loadGroupRedirectLink() {
+        const domain = window.location.origin;
+        const encodedGroup = encodeURIComponent(groupName);
+        const redirectUrl = `${domain}/api/whatsapp-redirect/${encodedGroup}`;
+        
+        const container = document.getElementById("groupRedirectContainer");
+        container.innerHTML = `
+          <div class="redirect-link-container">
+            <div class="redirect-link-title">
+              🏷️ ${groupName} Group Redirect Link
+            </div>
+            <div class="redirect-link-description">
+              Use this link to redirect users to WhatsApp numbers in the "${groupName}" group
+            </div>
+            <div class="api-link-row">
+              <input class="api-link" readonly value="${redirectUrl}" />
+              <button class="copy-btn" onclick="copyGroupLink('${redirectUrl}')">Copy</button>
+            </div>
+          </div>
+        `;
+      }
+
+      function copyGroupLink(link) {
+        navigator.clipboard.writeText(link).then(() => {
+          event.target.textContent = 'Copied!';
+          setTimeout(() => (event.target.textContent = 'Copy'), 1200);
+        });
+      }
+
+      async function deleteNumber(index) {
+        const numberToDelete = currentNumbers[index];
+        if (!confirm(`Delete this number: ${numberToDelete.countryCode} ${numberToDelete.number}?`)) return;
+        
+        try {
+          await fetch("/api/delete-number", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `group=${groupName}&index=${index}`,
+          });
+          loadGroupNumbers();
+        } catch (error) {
+          alert(`❌ Error deleting number: ${error.message}`);
+        }
+      }
+
+      async function clearRedirectLogs() {
+        if (!confirm("Are you sure you want to clear all redirect logs? This action cannot be undone.")) return;
+        
+        try {
+          await fetch("/api/redirects/clear", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          });
+          loadGroupNumbers();
+          alert('✅ Redirect logs cleared successfully!');
+        } catch (error) {
+          alert(`❌ Error clearing logs: ${error.message}`);
+        }
+      }
+
+      function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFontSize(14);
+        doc.text(`Redirect Stats for Group: ${groupName}`, 10, 10);
+
+        if (!doc.autoTable) {
+          alert("jsPDF autoTable plugin is missing.");
+          return;
+        }
+
+        const headers = ["Country Code", "Number", "Status", "Redirects", "%"];
+        const rows = latestStats.map((stat) => [
+          stat.countryCode,
+          stat.number,
+          stat.status,
+          stat.count,
+          `${parseFloat(stat.percent).toFixed(1)}%`,
+        ]);
+
+        doc.autoTable({
+          startY: 20,
+          head: [headers],
+          body: rows,
+        });
+
+        doc.save(`redirect-stats-${groupName}.pdf`);
+      }
+
+      // Warn user about unsaved changes when leaving page
+      window.addEventListener('beforeunload', function (e) {
+        if (hasChanges) {
+          e.preventDefault();
+          e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        }
+      });
+
+      // Initialize
+      loadGroupNumbers();
+    </script>
+  </body>
+</html>

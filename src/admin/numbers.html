@@ -2,33 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Manage WhatsApp Numbers</title>
+    <title>Assign Number to Group</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/public/style.css" />
     <style>
-      * {
-        box-sizing: border-box;
-      }
       body {
         background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
         min-height: 100vh;
         margin: 0;
         font-family: "Segoe UI", Arial, sans-serif;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
+        padding: 2rem 1rem;
       }
+      
       .container {
         background: #fff;
-        padding: 2rem 1.5rem;
+        padding: 2.5rem 2rem;
         border-radius: 16px;
         box-shadow: 0 8px 32px rgba(60, 72, 100, 0.12);
-        width: 100%;
-        max-width: 900px;
+        max-width: 700px;
         margin: 0 auto;
         animation: fadeInUp 0.7s;
       }
+      
       @keyframes fadeInUp {
         from {
           opacity: 0;
@@ -39,678 +33,592 @@
           transform: translateY(0);
         }
       }
+      
       h1 {
         text-align: center;
         color: #2d3748;
-        margin-bottom: 1.5rem;
-        font-size: clamp(1.5rem, 4vw, 2rem);
+        margin-bottom: 2rem;
+        font-size: 2rem;
         font-weight: 600;
       }
-      form {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        justify-content: center;
+      
+      .form-section {
+        margin-bottom: 2rem;
+      }
+      
+      .section-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3748;
         margin-bottom: 1.5rem;
-        align-items: center;
-      }
-      form input[type="text"],
-      form input[type="number"] {
-        padding: 0.7rem 1rem;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        font-size: clamp(0.9rem, 2.5vw, 1rem);
-        background: #f8fafc;
-        transition: border-color 0.2s, box-shadow 0.2s;
-        outline: none;
-        min-width: 140px;
-        flex: 1;
-        min-height: 44px;
-      }
-      form input[type="text"]:focus,
-      form input[type="number"]:focus {
-        border-color: #7f9cf5;
-        box-shadow: 0 0 0 2px #c3dafe;
-      }
-      form label {
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.5rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: clamp(0.9rem, 2.5vw, 1rem);
-        color: #4a5568;
-        white-space: nowrap;
       }
-      form label input[type="checkbox"] {
+      
+      .form-grid {
+        display: grid;
+        gap: 1.5rem;
+      }
+      
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .form-label {
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+      }
+      
+      .form-input {
+        padding: 0.75rem 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        background: #f8fafc;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+      
+      .form-input:focus {
+        outline: none;
+        border-color: #7f9cf5;
+        box-shadow: 0 0 0 2px rgba(127, 156, 245, 0.2);
+        background: #fff;
+      }
+      
+      .form-input::placeholder {
+        color: #9ca3af;
+      }
+      
+      .status-group {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        margin-top: 0.5rem;
+      }
+      
+      .status-option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        color: #374151;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      
+      .status-option:hover {
+        color: #7f9cf5;
+      }
+      
+      .status-option input[type="radio"] {
+        width: 16px;
+        height: 16px;
         accent-color: #7f9cf5;
-        transform: scale(1.15);
-        min-width: 18px;
-        min-height: 18px;
       }
-      form button {
+      
+      .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .action-btn {
         background: linear-gradient(90deg, #7f9cf5 0%, #667eea 100%);
         color: #fff;
         border: none;
         border-radius: 8px;
-        padding: 0.8rem 1.5rem;
-        font-size: clamp(0.9rem, 2.5vw, 1rem);
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
         font-weight: 500;
         cursor: pointer;
-        transition: background 0.2s, transform 0.1s;
-        min-height: 44px;
-        white-space: nowrap;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        min-width: 120px;
       }
-      form button:hover {
+      
+      .action-btn:hover {
         background: linear-gradient(90deg, #667eea 0%, #7f9cf5 100%);
         transform: translateY(-2px) scale(1.03);
       }
-      .table-container {
-        overflow-x: auto;
-        margin-bottom: 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(127, 156, 245, 0.08);
+      
+      .action-btn:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+        transform: none;
       }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        background: #f8fafc;
-        font-size: clamp(0.85rem, 2.2vw, 1rem);
-        min-width: 600px;
+      
+      .action-btn.secondary {
+        background: linear-gradient(90deg, #6b7280 0%, #4b5563 100%);
       }
-      th,
-      td {
-        padding: 0.75rem 0.5rem;
-        text-align: center;
-        border-bottom: 1px solid #e2e8f0;
+      
+      .action-btn.secondary:hover {
+        background: linear-gradient(90deg, #4b5563 0%, #6b7280 100%);
       }
-      th {
-        background: #e0e7ef;
-        color: #2d3748;
-        font-weight: 600;
-        white-space: nowrap;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-      }
-      td {
-        white-space: nowrap;
-      }
-      td:last-child {
-        min-width: 140px;
-      }
-      .action-btn {
-        margin: 0 0.25rem;
-        padding: 0.4rem 0.8rem;
-        border-radius: 6px;
-        border: none;
-        font-size: clamp(0.8rem, 2vw, 0.9rem);
-        cursor: pointer;
-        transition: background 0.2s, color 0.2s, transform 0.1s;
-        min-height: 32px;
-      }
-      .edit-btn {
-        background: #7f9cf5;
-        color: #fff;
-      }
-      .edit-btn:hover {
-        background: #667eea;
-        transform: scale(1.05);
-      }
-      .delete-btn {
-        background: #e53e3e;
-        color: #fff;
-      }
-      .delete-btn:hover {
-        background: #c53030;
-        transform: scale(1.05);
-      }
-      .status-checkbox {
-        accent-color: #7f9cf5;
-        transform: scale(1.15);
-        margin-right: 0.5rem;
-      }
+      
       .back-link {
         display: inline-block;
-        margin-top: 1rem;
-        background: #7f9cf5;
+        background: #6b7280;
         color: #fff;
-        padding: 0.7rem 1.5rem;
+        padding: 0.8rem 1.5rem;
         border-radius: 8px;
         text-decoration: none;
         font-weight: 500;
-        transition: background 0.2s, transform 0.1s;
-        font-size: clamp(0.9rem, 2.5vw, 1rem);
-        text-align: center;
+        transition: all 0.2s;
+        margin-top: 1.5rem;
       }
+      
       .back-link:hover {
-        background: #667eea;
+        background: #4b5563;
         transform: translateY(-2px) scale(1.03);
       }
-      /* Modal styles */
-      .modal-bg {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(60, 72, 100, 0.3);
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        transition: opacity 0.3s;
+      
+      .notification {
         padding: 1rem;
-      }
-      .modal-bg.active {
-        display: flex;
-        animation: fadeIn 0.3s;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-      .modal {
-        background: #fff;
-        padding: 2rem 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 8px 32px rgba(60, 72, 100, 0.2);
-        text-align: center;
-        width: 100%;
-        max-width: 450px;
-        min-width: 300px;
-        animation: popIn 0.25s;
-      }
-      @keyframes popIn {
-        from {
-          transform: scale(0.9);
-          opacity: 0;
-        }
-        to {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-      .modal h3 {
-        margin-bottom: 1.5rem;
-        color: #2d3748;
-        font-size: clamp(1.1rem, 3vw, 1.3rem);
-      }
-      .modal-form {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-      }
-      .modal-form label {
-        display: flex;
-        flex-direction: column;
-        text-align: left;
-        gap: 0.5rem;
-        font-size: clamp(0.9rem, 2.5vw, 1rem);
-        color: #4a5568;
-        font-weight: 500;
-      }
-      .modal-form input[type="text"],
-      .modal-form input[type="number"] {
-        padding: 0.75rem 1rem;
-        border: 1px solid #cbd5e1;
         border-radius: 8px;
-        font-size: clamp(0.9rem, 2.5vw, 1rem);
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+        display: none;
+      }
+      
+      .notification.success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+      }
+      
+      .notification.error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+      
+      .notification.show {
+        display: block;
+        animation: slideIn 0.3s ease-out;
+      }
+      
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 1rem;
+        align-items: end;
+      }
+      
+      .preview-section {
         background: #f8fafc;
-        transition: border-color 0.2s, box-shadow 0.2s;
-        outline: none;
-        min-height: 44px;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        border: 1px solid #e2e8f0;
       }
-      .modal-form input[type="text"]:focus,
-      .modal-form input[type="number"]:focus {
-        border-color: #7f9cf5;
-        box-shadow: 0 0 0 2px #c3dafe;
-      }
-      .modal-checkbox-group {
+      
+      .preview-title {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 1rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        justify-content: center;
-        margin: 1rem 0;
       }
-      .modal-checkbox-group input[type="checkbox"] {
-        accent-color: #7f9cf5;
-        transform: scale(1.2);
-        min-width: 20px;
-        min-height: 20px;
-      }
-      .modal-checkbox-group label {
-        margin: 0;
-        font-size: clamp(0.9rem, 2.5vw, 1rem);
-        color: #4a5568;
-      }
-      .modal-buttons {
-        display: flex;
-        gap: 0.75rem;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-      .modal button {
-        padding: 0.7rem 1.5rem;
-        font-size: clamp(0.9rem, 2.5vw, 1rem);
+      
+      .preview-content {
+        background: #fff;
+        padding: 1rem;
         border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        transition: background 0.2s, transform 0.1s;
-        min-height: 44px;
-        min-width: 80px;
-        font-weight: 500;
+        border: 1px solid #e2e8f0;
+        font-family: monospace;
+        font-size: 0.9rem;
+        color: #4b5563;
+        white-space: pre-wrap;
       }
-
-      button {
-        padding: 0.7rem 1.5rem;
-        font-size: clamp(0.9rem, 2.5vw, 1rem);
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        transition: background 0.2s, transform 0.1s;
-        min-height: 44px;
-        min-width: 80px;
-        font-weight: 500;
+      
+      .input-group {
+        position: relative;
       }
-
-      .modal button[type="submit"],
-      .modal button:not(.cancel) {
-        background: #7f9cf5;
-        color: #fff;
+      
+      .input-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        font-size: 1.1rem;
       }
-      .modal button[type="submit"]:hover,
-      .modal button:not(.cancel):hover {
-        background: #667eea;
-        transform: translateY(-1px);
+      
+      .input-with-icon {
+        padding-left: 2.5rem;
       }
-      .modal button.cancel {
-        background: #e2e8f0;
-        color: #2d3748;
+      
+      .required-indicator {
+        color: #ef4444;
+        font-size: 0.8rem;
+        margin-left: 0.25rem;
       }
-      .modal button.cancel:hover {
-        background: #cbd5e1;
-        transform: translateY(-1px);
-      }
-      .modal-message {
-        font-size: clamp(1rem, 2.8vw, 1.1rem);
-        color: #2d3748;
-        margin-bottom: 1.5rem;
-        line-height: 1.5;
-      }
-      /* Mobile-first responsive breakpoints */
-      @media (max-width: 480px) {
-        body {
-          padding: 0.5rem;
-        }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
         .container {
           padding: 1.5rem 1rem;
-          border-radius: 12px;
         }
-        form {
-          flex-direction: column;
-          align-items: stretch;
-        }
-        form input[type="text"],
-        form input[type="number"] {
-          min-width: 100%;
-          flex: none;
-        }
-        form label {
-          justify-content: center;
-        }
-        form button {
-          width: 100%;
-        }
-        .action-btn {
-          margin: 0.1rem;
-          padding: 0.5rem 0.6rem;
-          font-size: 0.8rem;
-        }
-        .modal {
-          padding: 1.5rem 1rem;
-          min-width: 280px;
-        }
-        .modal-buttons {
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-        .modal button {
-          width: 100%;
-        }
-        .back-link {
-          width: 100%;
-          text-align: center;
-        }
-      }
-      @media (min-width: 481px) and (max-width: 768px) {
-        .container {
-          padding: 2rem 1.25rem;
-        }
-        form {
-          gap: 1rem;
-        }
-        form input[type="text"],
-        form input[type="number"] {
-          min-width: 160px;
-        }
-        .modal {
-          max-width: 500px;
-        }
-      }
-      @media (min-width: 769px) {
-        .container {
-          padding: 2.5rem 2rem;
-        }
-        form {
-          gap: 1rem;
-        }
-        form input[type="text"],
-        form input[type="number"] {
-          min-width: 180px;
-          max-width: 200px;
-        }
-        .modal {
-          max-width: 450px;
-        }
-        .container:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 40px rgba(60, 72, 100, 0.15);
-        }
-        th:hover {
-          background: #d1d5db;
-        }
-        tr:hover {
-          background: #f1f5f9;
-        }
-      }
-      @media (max-height: 500px) and (orientation: landscape) {
-        body {
-          align-items: flex-start;
-          padding: 0.5rem;
-        }
-        .container {
-          margin: 0;
-          padding: 1rem;
-        }
+        
         h1 {
-          margin-bottom: 1rem;
+          font-size: 1.6rem;
         }
-        .modal {
-          padding: 1rem;
-          max-height: 90vh;
-          overflow-y: auto;
+        
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        
+        .form-actions {
+          flex-direction: column;
+          align-items: center;
+        }
+        
+        .action-btn {
+          width: 100%;
+          max-width: 300px;
+        }
+        
+        .status-group {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.75rem;
+        }
+        
+        .section-title {
+          font-size: 1.1rem;
         }
       }
-      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      
+      @media (max-width: 480px) {
         .container {
-          box-shadow: 0 8px 32px rgba(60, 72, 100, 0.15);
+          padding: 1rem 0.8rem;
         }
-        .modal {
-          box-shadow: 0 8px 32px rgba(60, 72, 100, 0.25);
+        
+        h1 {
+          font-size: 1.4rem;
         }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        * {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
+        
+        .form-input {
+          padding: 0.6rem 0.8rem;
+          font-size: 0.9rem;
+        }
+        
+        .input-with-icon {
+          padding-left: 2.2rem;
+        }
+        
+        .input-icon {
+          font-size: 1rem;
         }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>WhatsApp Numbers</h1>
-      <form id="addForm">
-        <input name="countryCode" placeholder="Country Code" required />
-        <input name="number" placeholder="Number" required />
-        <label>
-          <input type="checkbox" name="status" value="active" checked />
-          Active
-        </label>
-        <button type="submit">Add Number</button>
+      <h1>📱 Assign Number to Group</h1>
+      
+      <div class="notification" id="notification"></div>
+      
+      <form id="assignForm">
+        <div class="form-section">
+          <div class="section-title">
+            📞 Phone Number Details
+          </div>
+          <div class="form-grid">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">
+                  Country Code
+                  <span class="required-indicator">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-icon">🌍</span>
+                  <input 
+                    type="text" 
+                    name="countryCode" 
+                    class="form-input input-with-icon" 
+                    placeholder="e.g., +1, +91, +44" 
+                    required 
+                    pattern="^\+?[1-9]\d{0,3}$"
+                    title="Please enter a valid country code (e.g., +1, +91, +44)"
+                  />
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">
+                  Phone Number
+                  <span class="required-indicator">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-icon">📱</span>
+                  <input 
+                    type="tel" 
+                    name="number" 
+                    class="form-input input-with-icon" 
+                    placeholder="Enter phone number" 
+                    required 
+                    pattern="^[0-9]{7,15}$"
+                    title="Please enter a valid phone number (7-15 digits)"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Custom Message (Optional)</label>
+              <div class="input-group">
+                <span class="input-icon">💬</span>
+                <input 
+                  type="text" 
+                  name="message" 
+                  class="form-input input-with-icon" 
+                  placeholder="Enter custom WhatsApp message (optional)" 
+                  maxlength="200"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title">
+            🏷️ Group Assignment
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">
+                Select Group
+                <span class="required-indicator">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-icon">📂</span>
+                <select name="group" class="form-input input-with-icon" required>
+                  <option value="">Choose a group...</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <div class="status-group">
+                <label class="status-option">
+                  <input type="radio" name="status" value="active" checked />
+                  <span>✅ Active</span>
+                </label>
+                <label class="status-option">
+                  <input type="radio" name="status" value="inactive" />
+                  <span>❌ Inactive</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-section">
+          <div class="preview-title">
+            👀 Preview
+          </div>
+          <div class="preview-content" id="previewContent">
+            Fill in the form to see a preview of the WhatsApp number assignment...
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="action-btn">
+            ✅ Assign Number
+          </button>
+          <button type="button" class="action-btn secondary" onclick="resetForm()">
+            🔄 Reset Form
+          </button>
+        </div>
       </form>
-      <div class="table-container">
-        <table id="numbersTable">
-          <thead>
-            <tr>
-              <th>Country Code</th>
-              <th>Number</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <h2 style="text-align: center; margin-top: 2.5rem">
-        Redirect Stats Today
-      </h2>
-      <div class="table-container">
-        <table id="statsTable">
-          <thead>
-            <tr>
-              <th>Country Code</th>
-              <th>Number</th>
-              <th>Status</th>
-              <th>Redirects</th>
-              <th>% of Total</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <button type="button" id="clearLogBtn">Clear Redirect Log</button>
-      <a class="back-link" href="/admin">Back to Admin</a>
-      <a class="back-link" href="/messages">Assign Custom Messages</a>
+      
+      <a class="back-link" href="/admin">← Back to Admin</a>
     </div>
-    <!-- Edit Modal -->
-    <div class="modal-bg" id="editModalBg">
-      <div class="modal">
-        <h3>Edit WhatsApp Number</h3>
-        <form id="editForm">
-          <input type="hidden" name="index" id="editIndex" />
-          <div class="modal-form">
-            <label>
-              Country Code:
-              <input name="countryCode" id="editCountryCode" required />
-            </label>
-            <label>
-              Number:
-              <input name="number" id="editNumber" required />
-            </label>
-          </div>
-          <div class="modal-checkbox-group">
-            <input
-              type="checkbox"
-              name="status"
-              id="editStatus"
-              value="active"
-            />
-            <label for="editStatus">Active</label>
-          </div>
-          <div class="modal-buttons">
-            <button type="submit">Save Changes</button>
-            <button type="button" class="cancel" onclick="closeEditModal()">
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <!-- Delete Confirmation Modal -->
-    <div class="modal-bg" id="deleteModalBg">
-      <div class="modal">
-        <div class="modal-message" id="deleteMsg">
-          Are you sure you want to delete this WhatsApp number?
-        </div>
-        <div class="modal-buttons">
-          <button id="deleteConfirmBtn">Delete</button>
-          <button class="cancel" id="deleteCancelBtn">Cancel</button>
-        </div>
-      </div>
-    </div>
+
     <script>
-      let deleteIndex = null;
-      async function loadNumbers() {
-        const res = await fetch("/api/numbers");
-        const numbers = await res.json();
-        const tbody = document.querySelector("#numbersTable tbody");
-        tbody.innerHTML = "";
-        numbers.forEach((n, i) => {
-          const checked = n.status === "active" ? "checked" : "";
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-          <td>${n.countryCode}</td>
-          <td>${n.number}</td>
-          <td>
-            <input type="checkbox" class="status-checkbox" ${checked} onchange="updateStatus(${i}, this.checked)">
-            <span>${n.status === "active" ? "Active" : "Inactive"}</span>
-          </td>
-          <td>
-            <button class="action-btn edit-btn" onclick="editNumber(${i})">Edit</button>
-            <button class="action-btn delete-btn" onclick="showDeleteModal(${i})">Delete</button>
-          </td>
-        `;
-          tbody.appendChild(tr);
-        });
+      let currentGroups = [];
+
+      // Show notification
+      function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = `notification ${type} show`;
+        
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 5000);
       }
-      async function loadStats() {
-        const res = await fetch("/api/redirect-stats");
-        const stats = await res.json();
-        const tbody = document.querySelector("#statsTable tbody");
-        tbody.innerHTML = "";
-        stats.forEach((s) => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-          <td>${s.countryCode}</td>
-          <td>${s.number}</td>
-          <td>${s.status === "active" ? "Active" : "Inactive"}</td>
-          <td>${s.count}</td>
-          <td>${s.percent}%</td>
-        `;
-          tbody.appendChild(tr);
-        });
+
+      // Update preview
+      function updatePreview() {
+        const form = document.getElementById('assignForm');
+        const formData = new FormData(form);
+        const countryCode = formData.get('countryCode') || '[Country Code]';
+        const number = formData.get('number') || '[Phone Number]';
+        const message = formData.get('message') || '[No custom message]';
+        const group = formData.get('group') || '[No group selected]';
+        const status = formData.get('status') || 'active';
+        
+        const preview = document.getElementById('previewContent');
+        preview.textContent = `📱 Number: ${countryCode} ${number}
+🏷️ Group: ${group}
+💬 Message: ${message}
+📊 Status: ${status.charAt(0).toUpperCase() + status.slice(1)}
+
+🔗 This number will be available for WhatsApp redirects in the "${group}" group.`;
       }
-      function editNumber(index) {
-        fetch("/api/numbers")
-          .then((res) => res.json())
-          .then((numbers) => {
-            const n = numbers[index];
-            document.getElementById("editIndex").value = index;
-            document.getElementById("editCountryCode").value = n.countryCode;
-            document.getElementById("editNumber").value = n.number;
-            document.getElementById("editStatus").checked =
-              n.status === "active";
-            document.getElementById("editModalBg").classList.add("active");
+
+      // Fetch and load groups from backend
+      async function loadGroups() {
+        try {
+          const res = await fetch("/api/groups");
+          if (!res.ok) throw new Error('Failed to load groups');
+          
+          const groups = await res.json();
+          currentGroups = groups;
+          
+          const groupSelect = document.querySelector('select[name="group"]');
+          groupSelect.innerHTML = '<option value="">Choose a group...</option>';
+          
+          groups.forEach(group => {
+            const option = document.createElement("option");
+            option.value = group;
+            option.textContent = group;
+            groupSelect.appendChild(option);
           });
+          
+          if (groups.length === 0) {
+            showNotification('No groups available. Please create a group first.', 'error');
+          }
+        } catch (error) {
+          showNotification('Failed to load groups: ' + error.message, 'error');
+        }
       }
-      function closeEditModal() {
-        document.getElementById("editModalBg").classList.remove("active");
+
+      // Reset form
+      function resetForm() {
+        if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
+          document.getElementById('assignForm').reset();
+          updatePreview();
+        }
       }
-      document.getElementById("editForm").onsubmit = async (e) => {
+
+      // Form validation
+      function validateForm(formData) {
+        const countryCode = formData.get('countryCode');
+        const number = formData.get('number');
+        const group = formData.get('group');
+        
+        if (!countryCode || !number || !group) {
+          throw new Error('Please fill in all required fields.');
+        }
+        
+        if (!/^\+?[1-9]\d{0,3}$/.test(countryCode)) {
+          throw new Error('Please enter a valid country code (e.g., +1, +91, +44).');
+        }
+        
+        if (!/^[0-9]{7,15}$/.test(number)) {
+          throw new Error('Please enter a valid phone number (7-15 digits).');
+        }
+        
+        if (!currentGroups.includes(group)) {
+          throw new Error('Selected group is not valid.');
+        }
+      }
+
+      // Form submit handler
+      document.getElementById("assignForm").onsubmit = async function (e) {
         e.preventDefault();
-        if (!confirm("Save changes to this number?")) return;
-        const index = document.getElementById("editIndex").value;
-        const countryCode = document.getElementById("editCountryCode").value;
-        const number = document.getElementById("editNumber").value;
-        const status = document.getElementById("editStatus").checked
-          ? "active"
-          : "inactive";
-        await fetch("/api/numbers/edit", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: `index=${index}&countryCode=${encodeURIComponent(
-            countryCode
-          )}&number=${encodeURIComponent(number)}&status=${status}`,
-        });
-        closeEditModal();
-        loadNumbers();
-      };
-      async function updateStatus(index, checked) {
-        const status = checked ? "active" : "inactive";
-        await fetch("/api/numbers/status", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: `index=${index}&status=${status}`,
-        });
-        loadNumbers();
-      }
-      function showDeleteModal(index) {
-        deleteIndex = index;
-        document.getElementById("deleteModalBg").classList.add("active");
-      }
-      document.getElementById("deleteConfirmBtn").onclick = async function () {
-        if (deleteIndex !== null) {
-          await fetch("/api/numbers/delete", {
+        
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        
+        try {
+          const formData = new FormData(this);
+          
+          // Validate form
+          validateForm(formData);
+          
+          // Show confirmation
+          const countryCode = formData.get('countryCode');
+          const number = formData.get('number');
+          const group = formData.get('group');
+          const status = formData.get('status');
+          const message = formData.get('message') || 'No custom message';
+          
+          const confirmMessage = `Are you sure you want to assign this number to the group?
+
+📱 Number: ${countryCode} ${number}
+🏷️ Group: ${group}
+💬 Message: ${message}
+📊 Status: ${status.charAt(0).toUpperCase() + status.slice(1)}
+
+This will make the number available for WhatsApp redirects in the "${group}" group.`;
+          
+          if (!confirm(confirmMessage)) {
+            return;
+          }
+          
+          // Disable submit button
+          submitBtn.disabled = true;
+          submitBtn.textContent = '⏳ Assigning...';
+          
+          const data = new URLSearchParams(formData);
+          const res = await fetch("/api/assign-number", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "index=" + encodeURIComponent(deleteIndex),
+            body: data
           });
-          deleteIndex = null;
-          document.getElementById("deleteModalBg").classList.remove("active");
-          loadNumbers();
-        }
-      };
-      document.getElementById("deleteCancelBtn").onclick = function () {
-        deleteIndex = null;
-        document.getElementById("deleteModalBg").classList.remove("active");
-      };
-      document.getElementById("addForm").onsubmit = async (e) => {
-        e.preventDefault();
-        const fd = new FormData(e.target);
-        const status = fd.get("status") === "active" ? "active" : "inactive";
-        const data = new URLSearchParams(fd);
-        data.set("status", status);
-        await fetch("/api/numbers", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: data,
-        });
-        e.target.reset();
-        document.querySelector('input[name="status"]').checked = true;
-        loadNumbers();
-      };
-      document.getElementById("clearLogBtn").onclick = async function () {
-        if (confirm("Are you sure you want to clear all redirect logs?")) {
-          await fetch("/api/redirects/clear", { method: "POST" });
-          await loadStats(); // Refresh stats table if you have a loadStats() function
-        }
-      };
-      // Close modals on outside click
-      document
-        .getElementById("editModalBg")
-        .addEventListener("click", function (e) {
-          if (e.target === this) closeEditModal();
-        });
-      document
-        .getElementById("deleteModalBg")
-        .addEventListener("click", function (e) {
-          if (e.target === this) {
-            deleteIndex = null;
-            this.classList.remove("active");
+
+          if (res.ok) {
+            showNotification(`✅ Number ${countryCode} ${number} assigned to group "${group}" successfully!`, 'success');
+            this.reset();
+            updatePreview();
+          } else {
+            const result = await res.json().catch(() => null);
+            throw new Error(result?.message || 'Unknown error occurred');
           }
-        });
-      // Close modals on ESC key
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-          closeEditModal();
-          deleteIndex = null;
-          document.getElementById("deleteModalBg").classList.remove("active");
+        } catch (error) {
+          showNotification(`❌ Assignment failed: ${error.message}`, 'error');
+        } finally {
+          // Re-enable submit button
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
         }
-      });
-      loadNumbers();
-      loadStats();
-      // Optionally reload stats after actions:
-      const origLoadNumbers = loadNumbers;
-      loadNumbers = async function () {
-        await origLoadNumbers();
-        await loadStats();
       };
+
+      // Add event listeners for real-time preview
+      document.getElementById('assignForm').addEventListener('input', updatePreview);
+      document.getElementById('assignForm').addEventListener('change', updatePreview);
+
+      // Initialize
+      loadGroups();
+      updatePreview();
     </script>
   </body>
 </html>

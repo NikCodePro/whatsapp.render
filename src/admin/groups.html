@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Groups</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(60, 72, 100, 0.12);
+      overflow: hidden;
+      animation: fadeInUp 0.7s;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #7f9cf5 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .content {
+      padding: 2rem;
+    }
+
+    .form-section {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid #667eea;
+    }
+
+    .form-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .form-input {
+      flex: 1;
+      min-width: 250px;
+      padding: 0.8rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+      background: white;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: #9ca3af;
+    }
+
+    .add-btn {
+      background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .add-btn:hover {
+      background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .table-section {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    .table-header {
+      background: #f8fafc;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .table-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #2d3748;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .groups-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .groups-table th {
+      background: #f8fafc;
+      padding: 1rem 1.5rem;
+      text-align: left;
+      font-weight: 600;
+      color: #4a5568;
+      border-bottom: 2px solid #e2e8f0;
+      white-space: nowrap;
+    }
+
+    .groups-table td {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      color: #2d3748;
+    }
+
+    .groups-table tr:hover {
+      background: #f8fafc;
+    }
+
+    .group-name {
+      font-weight: 500;
+      color: #2d3748;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .group-icon {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+    }
+
+    .delete-btn {
+      background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .delete-btn:hover {
+      background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #6b7280;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state-text {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state-subtext {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #6b7280;
+    }
+
+    .loading::after {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #e2e8f0;
+      border-top: 2px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 0.5rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .success-message {
+      background: #dcfce7;
+      color: #166534;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #10b981;
+      display: none;
+    }
+
+    .error-message {
+      background: #fef2f2;
+      color: #991b1b;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #ef4444;
+      display: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+      }
+
+      .header {
+        padding: 1.5rem 1rem;
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+      }
+
+      .header p {
+        font-size: 1rem;
+      }
+
+      .back-btn {
+        position: static;
+        margin-bottom: 1rem;
+        align-self: flex-start;
+      }
+
+      .content {
+        padding: 1.5rem 1rem;
+      }
+
+      .form-section {
+        padding: 1rem;
+      }
+
+      .form-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .form-input {
+        min-width: auto;
+        width: 100%;
+      }
+
+      .add-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .table-header {
+        padding: 1rem;
+      }
+
+      .groups-table th,
+      .groups-table td {
+        padding: 0.8rem 1rem;
+      }
+
+      .groups-table th:last-child,
+      .groups-table td:last-child {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      .header p {
+        font-size: 0.9rem;
+      }
+
+      .form-input {
+        font-size: 0.9rem;
+      }
+
+      .groups-table th,
+      .groups-table td {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      .delete-btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="/admin" class="back-btn">
+        ← Back to Admin
+      </a>
+      <div class="header-content">
+        <h1>🏷️ Group Management</h1>
+        <p>Create and manage WhatsApp groups for organized redirects</p>
+      </div>
+    </div>
+
+    <div class="content">
+      <div id="successMessage" class="success-message"></div>
+      <div id="errorMessage" class="error-message"></div>
+
+      <div class="form-section">
+        <div class="form-title">➕ Add New Group</div>
+        <form id="groupForm">
+          <div class="form-group">
+            <input 
+              type="text" 
+              id="groupName" 
+              class="form-input"
+              placeholder="Enter group name (e.g., Support, Sales, Technical)" 
+              required
+            >
+            <button type="submit" class="add-btn">
+              <span>✨</span> Add Group
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-section">
+        <div class="table-header">
+          <div class="table-title">📋 Existing Groups</div>
+        </div>
+        <div class="table-container">
+          <table class="groups-table" id="groupTable">
+            <thead>
+              <tr>
+                <th>Group Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="groupTableBody">
+              <tr>
+                <td colspan="2" class="loading">Loading groups...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showMessage(message, type = 'success') {
+      const successEl = document.getElementById('successMessage');
+      const errorEl = document.getElementById('errorMessage');
+      
+      // Hide both messages first
+      successEl.style.display = 'none';
+      errorEl.style.display = 'none';
+      
+      if (type === 'success') {
+        successEl.textContent = message;
+        successEl.style.display = 'block';
+        setTimeout(() => successEl.style.display = 'none', 3000);
+      } else {
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+        setTimeout(() => errorEl.style.display = 'none', 3000);
+      }
+    }
+
+    async function loadGroups() {
+      try {
+        const tbody = document.getElementById('groupTableBody');
+        tbody.innerHTML = '<tr><td colspan="2" class="loading">Loading groups...</td></tr>';
+        
+        const res = await fetch('/api/groups');
+        const groups = await res.json();
+        
+        tbody.innerHTML = '';
+        
+        if (groups.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="2" class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <div class="empty-state-text">No groups found</div>
+                <div class="empty-state-subtext">Create your first group to get started</div>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+        
+        groups.forEach(name => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>
+              <div class="group-name">
+                <div class="group-icon"></div>
+                ${name}
+              </div>
+            </td>
+            <td>
+              <button class="delete-btn" onclick="deleteGroup('${name}')">
+                <span>🗑️</span> Delete
+              </button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error loading groups:', error);
+        const tbody = document.getElementById('groupTableBody');
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="2" class="empty-state">
+              <div class="empty-state-icon">⚠️</div>
+              <div class="empty-state-text">Error loading groups</div>
+              <div class="empty-state-subtext">Please try refreshing the page</div>
+            </td>
+          </tr>
+        `;
+        showMessage('Failed to load groups. Please try again.', 'error');
+      }
+    }
+
+    document.getElementById('groupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const nameInput = document.getElementById('groupName');
+      const name = nameInput.value.trim();
+      
+      if (!name) {
+        showMessage('Please enter a group name.', 'error');
+        return;
+      }
+      
+      try {
+        const submitBtn = e.target.querySelector('.add-btn');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span>⏳</span> Adding...';
+        submitBtn.disabled = true;
+        
+        const response = await fetch('/api/groups', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name })
+        });
+        
+        if (response.ok) {
+          nameInput.value = '';
+          showMessage(`Group "${name}" created successfully!`, 'success');
+          loadGroups();
+        } else {
+          const errorData = await response.json();
+          showMessage(errorData.message || 'Failed to create group.', 'error');
+        }
+      } catch (error) {
+        console.error('Error creating group:', error);
+        showMessage('Failed to create group. Please try again.', 'error');
+      } finally {
+        const submitBtn = e.target.querySelector('.add-btn');
+        submitBtn.innerHTML = '<span>✨</span> Add Group';
+        submitBtn.disabled = false;
+      }
+    });
+
+    async function deleteGroup(name) {
+      if (!confirm(`Are you sure you want to delete the group "${name}"?`)) {
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/groups/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name })
+        });
+        
+        if (response.ok) {
+          showMessage(`Group "${name}" deleted successfully!`, 'success');
+          loadGroups();
+        } else {
+          const errorData = await response.json();
+          showMessage(errorData.message || 'Failed to delete group.', 'error');
+        }
+      } catch (error) {
+        console.error('Error deleting group:', error);
+        showMessage('Failed to delete group. Please try again.', 'error');
+      }
+    }
+
+    // Initialize
+    loadGroups();
+  </script>
+</body>
+</html>
