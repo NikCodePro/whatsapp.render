@@ -306,7 +306,7 @@ app.post('/api/redirects/clear', requireAdmin, async (req, res) => {
 // });
 
 app.post('/logout', (req, res) => {
-  req.session.destroy(() => res.redirect('/login'));
+  req.session.destroy(() => res.redirect('/'));
 });
 
 //API for managing groups
