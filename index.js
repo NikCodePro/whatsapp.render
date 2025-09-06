@@ -16,6 +16,7 @@ app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, './src/admin/index.html')));
+
 app.post('/login', async (req, res) => {
   const { username, password, remember } = req.body;
   if (await checkCredentials(username, password)) {
@@ -248,8 +249,6 @@ app.get('/api/redirect-stats', requireAdmin, async (req, res) => {
 });
 
 
-
-
 app.get('/api/group-redirects-summary', requireAdmin, async (req, res) => {
   const db = await connectDB();
   const redirects = await db.collection('redirects').aggregate([
@@ -355,6 +354,5 @@ app.get('/api/group-numbers/:groupName', requireAdmin, async (req, res) => {
   const filtered = numbers.filter(n => n.group === groupName);
   res.json(filtered);
 });
-
 
 app.listen(3000, "0.0.0.0", () => console.log('Running on http://localhost:3000'));
